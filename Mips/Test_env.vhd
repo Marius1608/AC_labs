@@ -2,64 +2,54 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-entity Test_env is
+entity test_env is
     Port ( clk : in STD_LOGIC;
-         btn : in STD_LOGIC_VECTOR (4 downto 0);
-         sw : in STD_LOGIC_VECTOR (15 downto 0);
-         led : out STD_LOGIC_VECTOR (15 downto 0);
-         an : out STD_LOGIC_VECTOR (7 downto 0);
-         cat : out STD_LOGIC_VECTOR (6 downto 0));
-end Test_env;
+           btn : in STD_LOGIC_VECTOR (4 downto 0);
+           sw : in STD_LOGIC_VECTOR (15 downto 0);
+           led : out STD_LOGIC_VECTOR (15 downto 0);
+           an : out STD_LOGIC_VECTOR (7 downto 0);
+           cat : out STD_LOGIC_VECTOR (6 downto 0)
+           );
+end test_env;
 
-architecture Behavioral of Test_env is
+architecture Behavioral of test_env is
 
-  
-    signal currentInstruction : std_logic_vector(31 downto 0);
-    signal PC_plus_4 : std_logic_vector(31 downto 0);
-    signal SSD_input : std_logic_vector(31 downto 0);
-    signal reset : std_logic;
-    signal enable: std_logic;
+component MPG is
+    Port ( enable : out STD_LOGIC;
+           btn : in STD_LOGIC;
+           clk : in STD_LOGIC);
+end component;
 
-   
-    component MPG
-        port (
-            enable : out std_logic;
-            btn : in std_logic;
-            clk : in std_logic
-        );
-    end component;
+component SEGMENTE is
+    Port ( clk : in STD_LOGIC;
+           digits : in STD_LOGIC_VECTOR (31 downto 0);
+           an : out STD_LOGIC_VECTOR (7 downto 0);
+           cat : out STD_LOGIC_VECTOR (6 downto 0));
+end component;
 
-    component SSD
-        port(
-            clk: in std_logic;
-            digits: in std_logic_vector(31 downto 0);
-            an: out std_logic_vector(7 downto 0);
-            cat: out std_logic_vector(6 downto 0)
-        );
-    end component;
+component IFetch is
+    Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           Jump : in STD_LOGIC;
+           PCSrc : in STD_LOGIC;
+           Jump_Address : in STD_LOGIC_VECTOR(31 downto 0);
+           Branch_Address : in STD_LOGIC_VECTOR(31 downto 0);
+           PC_4 : out STD_LOGIC_VECTOR(31 downto 0);
+           Instruction : out STD_LOGIC_VECTOR(31 downto 0)
+           );
+end component;
 
-    component IFetch
-        port ( 
-            clk : in std_logic;
-            jumpAddress: in std_logic_vector(31 downto 0);
-            branchAddress: in std_logic_vector(31 downto 0);
-            PC_4 : out std_logic_vector(31 downto 0);
-            jump: in std_logic;
-            pcSrc: in std_logic;
-            Instruction :out std_logic_vector(31 downto 0)
-        ); 
-    end component;
-
-
+signal enable: std_logic := '0';
+signal cnt: std_logic_vector (5 downto 0) := (others => '0');
+signal digits: std_logic_vector (31 downto 0) := (others => '0');
+signal pc: std_logic_vector (31 downto 0) := (others => '0');
+signal instr: std_logic_vector (31 downto 0) := (others => '0');
 
 begin
-    
-   
-    reset<= btn(4);
-    SSD_input <= currentInstruction when sw(7) = '0' else PC_plus_4;
-    
+
     c1: MPG port map(enable, btn(0), clk);
-    c2: IFetch port map(clk,X"00000000",X"00000010",PC_plus_4,sw(0),sw(1),currentInstruction );
-    c3 : SSD port map(clk, SSD_input,an,cat);
-  
+    c2: IFetch port map(enable, sw(5), sw(0), sw(1), x"0000000F", x"00000014", pc, instr);
+    digits <= instr when sw(7) = '0' else pc;
+    c3: SEGMENTE port map(clk, digits, an, cat);
+
 end Behavioral;
