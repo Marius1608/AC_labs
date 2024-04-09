@@ -1,16 +1,16 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity ID is
   Port (
     clk: in std_logic;
     RegWrite: in std_logic;
-    RegDst: in std_logic;
-    ExtOp: in std_logic;
     Instr: in std_logic_vector(25 downto 0);
+    RegDst: in std_logic;
     WD: in std_logic_vector(31 downto 0);
+    ExtOp: in std_logic;
     RD1: out std_logic_vector(31 downto 0);
     RD2: out std_logic_vector(31 downto 0);
     Ext_Imm: out std_logic_vector(31 downto 0);
@@ -21,7 +21,8 @@ end ID;
 
 architecture Behavioral of ID is
 
-signal outmux1:std_logic_vector(4 downto 0);
+signal outmux1:std_logic_vector(4 downto 0):="00000";
+signal Ext: STD_LOGIC_VECTOR(15 downto 0) := x"0000";
 
 component reg_file is
 port ( 
@@ -44,14 +45,9 @@ begin
  );
  outmux1 <= Instr(20 downto 16) when RegDst = '0' else Instr(15 downto 11);
  
- process(clk)
-    begin
-    if ExtOp='1'then
-    Ext_Imm<= x"0000" & Instr(15 downto 0);
-    end if;
-end process;
- 
- func<=Instr(5 downto 0);
- sa<=Instr(10 downto 6);
+Ext <= x"FFFF" * ("0" & Instr(15));
+Ext_Imm <= EXT & Instr(15 downto 0); 
+func<=Instr(5 downto 0);
+sa<=Instr(10 downto 6);
  
 end Behavioral;
