@@ -3,8 +3,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity IFetch is
-    Port ( clk : in STD_LOGIC;
-           reset : in STD_LOGIC;
+    Port ( 
+           Clk : in STD_LOGIC;
+           Reset : in STD_LOGIC;
+           Enable: in STD_LOGIC;
            Jump : in STD_LOGIC;
            PCSrc : in STD_LOGIC;
            Jump_Address : in STD_LOGIC_VECTOR(31 downto 0);
@@ -28,20 +30,23 @@ signal PC: STD_LOGIC_VECTOR(31 downto 0) := x"00000000";
 
 begin
 
-    process(clk, reset) 
-    begin
-        if reset = '1' then 
-            PC <= x"00000000";
-        end if;
-        if rising_edge (clk) then 
-            PC <= OutMux2;
-        end if;
-    end process;
-    
     c1: ROM port map(PC(5 downto 0), Instruction);
     Sum <= PC + 1;
-    PC_4 <= sum;
+    PC_4 <= Sum;
     OutMux1 <= Sum when PCSrc = '0' else Branch_Address;
     OutMux2 <= OutMux1 when Jump = '0' else Jump_Address;
     
+    process(Clk, Reset) 
+    begin
+        if Reset = '1' then 
+            PC <= x"00000000";
+        end if;
+        if rising_edge (Clk) then 
+            if Enable='1' then
+            PC <= OutMux2;
+            end if;
+        end if;
+    end process;
+    
+
 end Behavioral;
