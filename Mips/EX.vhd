@@ -20,15 +20,17 @@ end EX;
 
 architecture Behavioral of EX is
 signal OutMux : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+signal AluOpRez : STD_LOGIC_VECTOR(5 downto 0) := (others => '0');
 begin
     
     OutMux <= RD2 when ALUSrc = '0' else Ext_Imm;
+    AluOpRez <= func when ALUOp = 0 else ALUOp;
     Branch_Address <= Ext_Imm + PC_4;
     
-    process(RD1, OutMux, ALUOp)
+    process(RD1, OutMux, AluOpRez)
     variable AluOut: STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
     begin
-        case ALUOp is
+        case AluOpRez is
             --add
             when "100000" => AluOut := RD1 + OutMux;
             --sub
@@ -48,6 +50,7 @@ begin
                     AluOut := (others => '1');
                     AluOut := (others => '0');
                 end if;
+            when others => AluOut := x"00000000";
         end case;
         
         if AluOut = 0 then

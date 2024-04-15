@@ -157,26 +157,15 @@ signal MemData: std_logic_vector(31 downto 0):=(others=>'0');
 --signal enable: std_logic := '0';
 --signal MemWrite : STD_LOGIC := '0';
 
-
-signal OutMux:std_logic_vector(31 downto 0):=(others=>'0');
-
 begin
-    
+   
     reset<=btn(1);
-    Jump_Address<= PC_4(31 downto 28)& (Instruction(25 downto 0) & "00");
-    OutMux<=AluResOut when MemtoReg='0' else MemData;
-    WD<=OutMux;
-    PCSrc<=(BranchGTZ and GTZ)or(Zero and Branch);
-    
-    
+  
     c1: MPG port map(enable, btn(0), clk);
     c2: IFetch port map(clk, reset,enable,Jump ,PCSrc ,Jump_Address, Branch_Address, PC_4, Instruction);
     c3: SEGMENTE port map(clk, digits, an, cat);
     c4: ID port map(clk, RegWrite, Instruction(25 downto 0), RegDst, WD, ExtOp, RD1, RD2, Ext_Imm, func, sa);
-    c5: UC port map(Instruction(31 downto 26), RegDst, ExtOp, ALUSrc, Branch, BranchGTZ, Jump, MemWrite, MemtoReg, RegWrite,ALUOp);  
-    c6: EX port map(RD1,ALUSrc,RD2,Ext_Imm,sa,func,ALUOp,PC_4,GTZ,Zero,AluRes,Branch_Address);
-    c7: MEM port map(MemWrite,AluRes,RD2,clk,enable,MemData,AluResOut);
-    
+  
     led(7) <= RegDst;
     led(6) <= ExtOp;
     led(5) <= ALUSrc;
@@ -188,10 +177,17 @@ begin
     led(1) <= MemtoReg;
     led(0) <= RegWrite;
     
+    c5: UC port map(Instruction(31 downto 26), RegDst, ExtOp, ALUSrc, Branch, BranchGTZ, Jump, MemWrite, MemtoReg, RegWrite,ALUOp);  
+    c6: EX port map(RD1,ALUSrc,RD2,Ext_Imm,sa,func,ALUOp,PC_4,GTZ,Zero,AluRes,Branch_Address);
+    c7: MEM port map(MemWrite,AluRes,RD2,clk,enable,MemData,AluResOut);
     
+       
+     --Jump_Address<= PC_4(31 downto 28)& (Instruction(25 downto 0) & "00");
+    Jump_Address <= PC_4(31 downto 26) & Instruction(25 downto 0);
+    WD<=AluResOut when MemtoReg='0' else MemData;
+    PCSrc<=(BranchGTZ and GTZ)or(Zero and Branch);
     
-    process (sw(7 downto 5),Instruction,PC_4,RD1,RD2,
-Ext_Imm,AluRes,MemData,WD)
+    process (sw(7 downto 5),Instruction,PC_4,RD1,RD2,Ext_Imm,AluRes,MemData,WD)
     begin
     case sw(7 downto 5) is
       when "000" => digits <= Instruction;
@@ -202,10 +198,9 @@ Ext_Imm,AluRes,MemData,WD)
       when "101" => digits <= AluRes;
       when "110" => digits <=MemData;
       when "111" => digits <= WD;
-      when others => digits <= Instruction;
+      when others => digits <= x"FFFFFFFF";
      end case;
     end process;
 
 				
-    
 end Behavioral;

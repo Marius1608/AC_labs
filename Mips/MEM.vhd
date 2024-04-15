@@ -26,7 +26,6 @@ signal ReadData: std_logic_vector(31 downto 0):=(others=>'0');
 begin
 WriteData<=RD2;
 Address<=ALUResIn(7 downto 2);
-MemData<=ReadData;
 
 process(Clk)
 begin
@@ -38,5 +37,7 @@ begin
 end process;
 
 ReadData<=MEM(CONV_INTEGER(Address));
+MemData<=ReadData;
+AluResOut<=ALUResIn;
 
 end Behavioral;
