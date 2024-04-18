@@ -4,7 +4,8 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use IEEE.std_logic_arith.ALL;
 
 entity EX is
-    Port ( RD1 : in STD_LOGIC_VECTOR (31 downto 0);
+    Port ( 
+           RD1 : in STD_LOGIC_VECTOR (31 downto 0);
            ALUSrc : in STD_LOGIC;
            RD2 : in STD_LOGIC_VECTOR (31 downto 0);
            Ext_Imm : in STD_LOGIC_VECTOR (31 downto 0);
@@ -19,8 +20,10 @@ entity EX is
 end EX;
 
 architecture Behavioral of EX is
+
 signal OutMux : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
 signal AluOpRez : STD_LOGIC_VECTOR(5 downto 0) := (others => '0');
+
 begin
     
     OutMux <= RD2 when ALUSrc = '0' else Ext_Imm;
@@ -50,7 +53,7 @@ begin
                     AluOut := (others => '1');
                     AluOut := (others => '0');
                 end if;
-            when others => AluOut := x"00000000";
+            when others => AluOut := (others=>'0');
         end case;
         
         if AluOut = 0 then

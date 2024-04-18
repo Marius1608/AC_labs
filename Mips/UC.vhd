@@ -1,7 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-
 entity UC is
     Port ( 
            Instr : in STD_LOGIC_VECTOR (5 downto 0);
@@ -19,7 +18,6 @@ entity UC is
 end UC;
 
 architecture Behavioral of UC is
-
 begin
 
 process(Instr)
