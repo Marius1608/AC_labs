@@ -55,7 +55,7 @@ begin
                          MemWrite <= '0';
                          MemtoReg <= '0';
                          RegWrite <= '1';
-                         ALUOp <= "100000";
+                         ALUOp <= "100001";
         --lw
         when "100011" => RegDst <= '0';
                          ExtOp <= '1';
@@ -95,7 +95,7 @@ begin
                          ExtOp <= '1';
                          ALUSrc <= '0';
                          Branch <= '0';
-                         BranchGTZ <= '0';
+                         BranchGTZ <= '1';
                          Jump <= '0';
                          MemWrite <= '0';
                          MemtoReg <= '0';
