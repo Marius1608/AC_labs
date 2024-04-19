@@ -44,7 +44,7 @@ begin
                          MemWrite <= '0';
                          MemtoReg <= '0';
                          RegWrite <= '1';
-                         ALUOp <= "100000";
+                         ALUOp <= "000001";
         --ori                 
         when "001101" => RegDst <= '0';
                          ExtOp <= '1';
@@ -55,7 +55,7 @@ begin
                          MemWrite <= '0';
                          MemtoReg <= '0';
                          RegWrite <= '1';
-                         ALUOp <= "100001";
+                         ALUOp <= "000010";
         --lw
         when "100011" => RegDst <= '0';
                          ExtOp <= '1';
@@ -66,7 +66,7 @@ begin
                          MemWrite <= '0';
                          MemtoReg <= '1';
                          RegWrite <= '1';
-                         ALUOp <= "100000";
+                         ALUOp <= "000001";
         --sw
         when "101011" => RegDst <= '0';
                          ExtOp <= '1';
@@ -77,7 +77,7 @@ begin
                          MemWrite <= '1';
                          MemtoReg <= '0';
                          RegWrite <= '0';
-                         ALUOp <= "100000";
+                         ALUOp <= "000001";
         --beq
         when "000100" => RegDst <= '0';
                          ExtOp <= '1';
@@ -88,7 +88,7 @@ begin
                          MemWrite <= '0';
                          MemtoReg <= '0';
                          RegWrite <= '0';
-                         ALUOp <= "100010";
+                         ALUOp <= "000100";
        
         --bgez
         when "000001" => RegDst <= '0';
@@ -100,7 +100,7 @@ begin
                          MemWrite <= '0';
                          MemtoReg <= '0';
                          RegWrite <= '0';
-                         ALUOp <= "100010";
+                         ALUOp <= "000100";
         --j
         when "000010" => RegDst <= '0';
                          ExtOp <= '0';
@@ -111,7 +111,7 @@ begin
                          MemWrite <= '0';
                          MemtoReg <= '0';
                          RegWrite <= '0';
-                         ALUOp <= "000000";
+                         ALUOp <= "001000";
                          
          when others => RegDst <= '0';
                          ExtOp <= '0';
