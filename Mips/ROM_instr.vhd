@@ -18,7 +18,7 @@ signal ROM: memory := ( B"000000_01010_01010_01010_00000_100110", --0  14A5026  
                         B"001000_11110_11110_0000000000000100", --5  23DE0004   addi $r30,$r30,4          Incrementeaza pointerul la adresa de memorie pentru rezultate  
                         B"100011_01010_00001_0000000000000000", --6  8D410000   lw $r1, 0($r10)           Incarca valoarea de la adresa 0 (Inceputul sirului) în registrul $r1  
                         B"001000_00000_00000_0000000000001000", --7  20000008   addi $r0, $r0, 8          Initializeaza un pointer la adresa de memorie pentru rezultate cu valoarea 8  
-                        B"001000_00001_01011_0000000000100000", --8  202B0020   addi $r11, $r1, 32        $r11 = adresa sfarsitului sirului (A + 8 * 4 = A + 32)  
+                        B"001000_00001_01011_0000000000111000", --8  202B0038   addi $r11, $r1, 56        $r11 = adresa sfarsitului sirului 
                         
                         B"000100_00001_01011_0000000000000101", --9     102B0005    beq $r1, $r11, offset 5   Continua bucla daca nu a ajuns la sfarsitul sirului
                         B"100011_00001_00010_0000000000000000", --10    8C220000    lw $r2, 0($r1)            Citeste valoarea curenta din sir la adresa indicata de $r1  

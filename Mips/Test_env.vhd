@@ -159,7 +159,7 @@ begin
     c3: SEGMENTE port map(clk, Digits, an, cat);
     c4: ID port map(Enable, RegWrite, Instruction(25 downto 0), RegDst, WD, ExtOp, RD1, RD2, Ext_Imm, func, sa);
   
-   led(0) <= RegDst;
+    led(0) <= RegDst;
     led(1) <= ExtOp;
     led(2) <= ALUSrc;
     led(3) <= Branch;
